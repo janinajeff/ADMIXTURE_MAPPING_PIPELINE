@@ -18,3 +18,5 @@ Found here https://github.com/armartin/ancestry_pipeline . Phasing was performed
 
 Using QC'd genotype files and the reference data, check and confirm the overlapping SNPs between the two datasets using -check function in ShapeIT.
 
+<theiscoderfytguhijkwrseydtfjygkuhijwersdrtfygkuhiljklerrtdjfyguhkijkl>
+

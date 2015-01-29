@@ -4,12 +4,12 @@ This pipeline wil provide a detailed workflow for performing admixture mapping u
 
 This pipeline will achieve the following:
 
-#### H4 1. Phasing using SHAPEIT
-#### H4 2. Convert SHAPEIT output into RFMIX input
-#### H4 3. Perform local ancestry inference using RFMIX
-#### H4 4. Convert RFMIX output into HAPMIX format for MIXSCORE
-#### H4 5. Perform two-way mapping using the Pasanuic et al paper
-#### H4 6. Plotting genome wide results
+####  1. Phasing using SHAPEIT
+####  2. Convert SHAPEIT output into RFMIX input
+####  3. Perform local ancestry inference using RFMIX
+####  4. Convert RFMIX output into HAPMIX format for MIXSCORE
+####  5. Perform two-way mapping using the Pasanuic et al paper
+####  6. Plotting genome wide results
 
 
 # Phasing

@@ -128,7 +128,17 @@ Usuage
 The shapeit2rfmix script assumes Phasing was done separately per population, so the classes file needed to be adjusted accordingly. I created a short shell script to this for my data, 'makeclassfile.sh'.
 
 For usage see below...
+```
+```
 
 ### Genetic Map file
 
 The genetic map file per chromosome can be downloaded from the 1000G website ("genetic_map_chr*_combined_b37.txt"). This file can be directly uploaded into RFMix files if the sites of interest have been extracted. Keep in mind a modified version of this files is made when using the shapeit2rfmix_JMJ.py script, *.map (output files name from script).
+
+
+## Running RFMix
+
+RFMix can be downloaded here https://sites.google.com/site/rfmixlocalancestryinference/. Here is an example on how to run RFMix but there is nice documentation now included in the package.
+
+```
+```

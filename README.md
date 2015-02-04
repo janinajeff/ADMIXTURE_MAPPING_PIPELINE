@@ -9,8 +9,8 @@ This pipeline will achieve the following:
 ####  3. Perform local ancestry inference using RFMIX
 ####  4. Convert RFMIX output into HAPMIX format for MIXSCORE
 ####  5. Perform admixture mapping using the Pasanuic et al
-#####      A. African Americans
-#####      B. Hispanic/Latinos
+#####      5A. African Americans
+#####      5B. Hispanic/Latinos
 ####  6. Plotting genome wide results in R
 
 

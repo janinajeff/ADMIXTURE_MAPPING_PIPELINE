@@ -113,9 +113,22 @@ do bsub -P acc_ipm2 -q alloc  -W 24:00 -e SHAPEIT2RFMIX_${i}.err -o SHAPEIT2RFMI
 done
 
 ```
+
+
+### Beagle to RFMix
+Files in Beagle format (usually converted from plink files using FC gene) can be converted into the RFMIX alleles file using the python scipt 'RFMIX_BEAGLE_Parser.py'. This script is supposed to check for strand flips, skip palindromic site, and recode alleles as 0 and 1 for RFMix allele matrix.
+
+Usuage
+```
+```
+
+
+#### Making class files
+
 The shapeit2rfmix script assumes Phasing was done separately per population, so the classes file needed to be adjusted accordingly. I created a short shell script to this for my data, 'makeclassfile.sh'.
 
 For usage see below...
 
+#### Genetic Map file
 
-### Beagle to RFMix
+The genetic map file per chromosome can be downloaded from the 1000G website ("genetic_map_chr*_combined_b37.txt"). This file can be directly uploaded into RFMix files if the sites of interest have been extracted. Keep in mind a modified version of this files is made when using the shapeit2rfmix_JMJ.py script, *.map (output files name from script).

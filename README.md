@@ -125,11 +125,7 @@ Usuage
 
 ### Making class files
 
-The shapeit2rfmix script assumes Phasing was done separately per population, so the classes file needed to be adjusted accordingly. I created a short shell script to this for my data, 'makeclassfile.sh'.
-
-For usage see below...
-```
-```
+The shapeit2rfmix script assumes Phasing was done separately per population, so the classes file needed to be adjusted accordingly. This is just a one file that denotes which individuals are references and which are samples for RFMIX. This can be done easily using a print or echo and the same class files can be used for all chromosomes since the order of the samples are the same up to this point.
 
 ### Genetic Map file
 
@@ -141,4 +137,26 @@ The genetic map file per chromosome can be downloaded from the 1000G website ("g
 RFMix can be downloaded here https://sites.google.com/site/rfmixlocalancestryinference/. Here is an example on how to run RFMix but there is nice documentation now included in the package.
 
 ```
+/sc/orga/projects/ipm/janina/bin/RFMix_PopPhased -m RFMIX_INPUT.22_chr22.snp_locations -p ALL.classes -a RFMIX_INPUT.22_chr22.alleles  -r 0 -o chr22_test
 ```
+## Making MIXSCORE input files.
+
+MIXSCORE runs several statistics that extend beyond both GWAS and admixture mapping independently to create a summary statistic that takes into account multiple hypothesis to identify putative genetic associations. Information about MIXSCORE can be found here and downloaded here. MIXSCORE requires genome-wide genotype information, global ancestry estimates (per individual), local ancestry calls (per SNP for every individual), phenotype information, covariate information (if necessary), and a parameter file.See sample files, mixscore.GENO, mixscore.GLOBANC, mixscore.LOCANC, mixscore.PHENO, mixscore.PAR
+
+### Converting RFMix Local ancestry calls to HapMix format for MIXSCORE
+I used a script that converts three way local ancestry calls from RFMix and collapses and recodes them into HapMix format for MIXSCORE, convert_RFMIX_MIXSCORE.sh, this will work for African Americans and codes RFMix output in to African vs Non African diplotype calls. See mixscore.LOCANC for an example
+
+``` sh convert_RFMIX_MIXSCORE.sh ```
+
+### Creating Global Ancestry Calls
+Global ancestry can be calculated using the local ancestry calls or using the ADMIXTURE Program (I can include details upon reuqest on how to run this). I used the later which is fairly simple to use. You want to extract the proportion of European Ancestry for MIXSCORE in African Americans, so just one column, % Euro global ancestry, for each person indicated by row. Make sure the global ancestry calls are in the same order as the local ancestry call!See mixscore.GLOBANC for an example
+
+### Converting Genotype Files
+MIXSCORE also requires a genotype file if you are calculating the ATT, SNP1,SUM, or MIX statistic. Please not this is not need for just running case-only admixture. Using Plink.raw files where genotypes are coded 0,1,2 copies of the minor allele, I converted this into Eigenstrat format using a shell script, make_geno_MIXSCORE.sh See mixscore.GENO for an example
+
+### Phenotype Files 
+MIXSCORE uses a phenotype file that is one line and codes cases as 1 and controls as 0 for each individual in the same order as the other files. This file has no spaces, mixscore.PHENO
+
+
+
+

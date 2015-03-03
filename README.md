@@ -10,7 +10,9 @@ This pipeline will achieve the following:
 ####  4. Convert RFMIX output into HAPMIX format for MIXSCORE
 ####  5. Perform admixture mapping using the Pasanuic et al
 #####      5A. African Americans
-#####      5B. Hispanic/Latinos (coming soon!)
+######        5A1. MIXSCORE
+######        5A2. Using mixomatic in R (coming soon!)
+#####      5B. Hispanic/Latinos Using mixomatic in R (coming soon!)
 ####  6. Plotting genome wide results in R
 
 
@@ -144,7 +146,11 @@ Each statistic the MIXSCORE package has needs to be run separately. The SNP1 and
 ```
 for i in {1..22}; do mixscore ADM T2D_AA_Chr${i}.ADM.par ; done
 ```
+## Running mixomatic
+Alternatively, if you just want to run admixture mapping with both cases and controls and/or the SUM of the association and admixture association you can use mixomatic. Mixomatic is nice in the sense that it incorporates cases and controls and allows the user to add covariates, including genotype information. This method uses likilhood ratio test to determine whether local ancetsry explains cases. This methods can also be used for quantitative traits.
 
 ## Plotting Results in R
 MIXSCORE output files prints the Chi2 for each SNP by row. To make a manhattan plot separate chromosome output files need to be merged into one file. Once this is complete the p-value for the Chi2 need to be calculated for each SNP. Finally the original map information needs to merged into this file, including SNP name and BP location. The final file should have SNP, BP, and P-value columns and can be easily plotting using qqman.r source code found here http://www.gettinggeneticsdone.com/2014/05/qqman-r-package-for-qq-and-manhattan-plots-for-gwas-results.html
-.
+
+The input file should look something like this..
+

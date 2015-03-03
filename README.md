@@ -24,8 +24,7 @@ Using QC'd genotype files and the reference data, check and confirm the overlapp
 
 See usage below
 ``` 
-for i in {1..22};
-do echo /sc/orga/projects/ipm/janina/bin/shapeit \
+/sc/orga/projects/ipm/janina/bin/shapeit \
 -check \
 --input-ref /sc/orga/projects/ipm/janina/DATA/1KG/1000GP_Phase3_chr${i}.hap.gz \
 /sc/orga/projects/ipm/janina/DATA/1KG/1000GP_Phase3_chr${i}.legend.gz \
@@ -34,17 +33,7 @@ do echo /sc/orga/projects/ipm/janina/bin/shapeit \
 /sc/orga/projects/ipm/janina/DATA/ILLUMINA/ipm-combo-norelateds.${i}.nodups.bim \
 /sc/orga/projects/ipm/janina/DATA/ILLUMINA/ipm-combo-norelateds.${i}.nodups.fam \
 --input-map /sc/orga/projects/ipm/janina/DATA/1KG/genetic_map_chr${i}_combined_b37.txt \
---output-log /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/ALL_check_fwd_cleaned_hg19_ref_chr${i}.mendel > SHAPEITCHECK.chr${i}.sh;
-done
-
-
-for i in {1..22};
-do echo sh SHAPEITCHECK.chr${i}.sh > SHAPEIT_CHECK_${i}.pbs;
-done
-
-for i in {1..22};
-do bsub -P acc_ipm2 -q alloc  -W 24:00 -e SHAPEIT_CHECK_${i}.err -o SHAPEIT_CHECK_${i}.out < SHAPEIT_CHECK_${i}.pbs;
-done
+--output-log /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/ALL_check_fwd_cleaned_hg19_ref_chr${i}.mendel 
 ```
 
 ### Phasing
@@ -52,8 +41,7 @@ After QC all samples were phased at using AFR, EUR, and AMR reference samples cu
 
 See usuage below
 ```
-for i in {1..22};
-do echo /sc/orga/projects/ipm/janina/bin/shapeit \
+/sc/orga/projects/ipm/janina/bin/shapeit \
 --input-ref /sc/orga/projects/ipm/janina/DATA/1KG/1000GP_Phase3_chr${i}.hap \
 /sc/orga/projects/ipm/janina/DATA/1KG/1000GP_Phase3_chr${i}.legend \
 /sc/orga/projects/ipm/janina/DATA/1KG/1000GP_Phase3.sample \
@@ -65,19 +53,10 @@ do echo /sc/orga/projects/ipm/janina/bin/shapeit \
 --include-grp /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/AFR_EUR_AMR.txt \
 --output-max /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/ALL_fwd_cleaned_hg19_ref_chr${i}.haps /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/ALL_fwd_cleaned_hg19_ref_c$
 done
-
-
-for i in {1..22};
-do echo sh PHASING.ALL.chr${i}.sh > PHASING.ALL.chr${i}.pbs;
-done
-
-for i in {1..22};
-do bsub -P acc_ipm2 -q alloc  -W 72:00 -n 2 -R "rusage[mem=8000]" -R "span[ptile=4]" -J Phasing${i} -e PHASING.ALL.chr${i}.err -o PHASING.ALL.chr${i}.out < PHASING.ALL.chr${i}.pbs;
-done
-
 ```
+
 ## Making RFMix Input Files
-RFMix files can be made from SHAPEIT or BEAGLE formatted files. Similiar to Alicia Martin's pipeline, I used SHAPEIT for phasing but I have included a script to convert BEAGLE formatted files for RFMIX.
+RFMix files can be made from SHAPEIT or BEAGLE formatted files. Similiar to Alicia Martin's pipeline, I used SHAPEIT for phasing but I have included a script to convert BEAGLE formatted files (from PLINK bed files) for RFMIX and can provide more detail upon request.
 
 ### SHAPEIT to RFMIX
 I made small modifications Alcia Martin's code shapeit2rfmix.py script (shapeit2rfmix_JMJ.py) for my data. My reference sample data was originally formatted in IMPUTE2 format, so wrote a short shell (impute2shapeit.sh) script to convert these files before using the shapeit2rfmix script. 
@@ -139,6 +118,9 @@ RFMix can be downloaded here https://sites.google.com/site/rfmixlocalancestryinf
 ```
 /sc/orga/projects/ipm/janina/bin/RFMix_PopPhased -m RFMIX_INPUT.22_chr22.snp_locations -p ALL.classes -a RFMIX_INPUT.22_chr22.alleles  -r 0 -o chr22_test
 ```
+# Admixture Mapping in African Americans
+The next few steps are how to perform admixture mapping using MIXSCORE, which is currently limited to African Americans.
+
 ## Making MIXSCORE input files.
 
 MIXSCORE runs several statistics that extend beyond both GWAS and admixture mapping independently to create a summary statistic that takes into account multiple hypothesis to identify putative genetic associations. Information about MIXSCORE can be found here and downloaded here. MIXSCORE requires genome-wide genotype information, global ancestry estimates (per individual), local ancestry calls (per SNP for every individual), phenotype information, covariate information (if necessary), and a parameter file.See sample files, mixscore.GENO, mixscore.GLOBANC, mixscore.LOCANC, mixscore.PHENO, mixscore.PAR

@@ -10,7 +10,7 @@ This pipeline will achieve the following:
 ####  4. Convert RFMIX output into HAPMIX format for MIXSCORE
 ####  5. Perform admixture mapping using the Pasanuic et al
 #####      5A. African Americans
-#####      5B. Hispanic/Latinos
+#####      5B. Hispanic/Latinos (coming soon!)
 ####  6. Plotting genome wide results in R
 
 
@@ -70,8 +70,7 @@ sh impute2shapeit.sh 1000GP_Phase3.sample 1000GP_Phase3_chr11.legend 1000GP_Phas
 See usuage below for shapeit2rfmix_JMJ.py
 
 ```
-for i in {1..22};
-do echo python /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/LOCANC/shapeit2rfmix_JMJ.py \
+python /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/LOCANC/shapeit2rfmix_JMJ.py \
 --shapeit_hap1 /sc/orga/projects/ipm/janina/DATA/1KG/shapeitrefconvert_${i}.haps \
 --shapeit_hap_admixed /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/SHAPEIT/ALL_fwd_cleaned_hg19_ref_chr${i}.haps \
 --shapeit_sample1 /sc/orga/projects/ipm/janina/DATA/1KG/shapeitrefconvert_22.sample \
@@ -80,27 +79,13 @@ do echo python /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/LOCANC/shapeit2rf
 --admixed_keep /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/PHASING/IDs.txt \
 --chr ${i} \
 --genetic_map /sc/orga/projects/ipm/janina/DATA/1KG/genetic_map_chr \
---out /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/LOCANC/RFMIX_INPUT.${i} > SHAPEIT2RFMIX_${i}.sh; done
-
-
-for i in {1..22};
-do echo sh SHAPEIT2RFMIX_${i}.sh > SHAPEIT2RFMIX_${i}.pbs;
-done
-
-for i in {1..22};
-do bsub -P acc_ipm2 -q alloc  -W 24:00 -e SHAPEIT2RFMIX_${i}.err -o SHAPEIT2RFMIX_${i}.out < SHAPEIT2RFMIX_${i}.pbs;
-done
+--out /sc/orga/projects/ipm/janina/ADMIXTURE_PIPELINE/LOCANC/RFMIX_INPUT.${i} 
 
 ```
 
 
-### Beagle to RFMix
+### Beagle to RFMix (Optional)
 Files in Beagle format (usually converted from plink files using FC gene) can be converted into the RFMIX alleles file using the python scipt 'RFMIX_BEAGLE_Parser.py'. This script is supposed to check for strand flips, skip palindromic site, and recode alleles as 0 and 1 for RFMix allele matrix.
-
-Usuage
-```
-```
-
 
 ### Making class files
 
@@ -139,6 +124,27 @@ MIXSCORE also requires a genotype file if you are calculating the ATT, SNP1,SUM,
 ### Phenotype Files 
 MIXSCORE uses a phenotype file that is one line and codes cases as 1 and controls as 0 for each individual in the same order as the other files. This file has no spaces, mixscore.PHENO
 
+### Parameter Files
+
+MIXSCORE requires a simple parameter file that states how many SNPs are being tested, how many samples to expect, the location of the input files, and the name and location of the output file. You can add additional options in this file too, such as running quantitative traits, see manual. Unfortunately mixscore does not allow a covariates (a major limitation to the method).
+Here is an example of a parameter file for one chromosome for the ADM (case-only admixture mapping) statistic. 
+
+nsamples:3342
+nsnps:8229
+phenofile:T2D_AA_PHENO_MIXSCORE
+ancfile: T2D_AA_Chr22.MIXSCORE
+genofile: Chr22_mixscore_geno
+thetafile: T2D_AA_EUR_GLOBANC
+outfile: AA_T2D_Chr22_ADM
 
 
+## Running MIXSCORE
+Each statistic the MIXSCORE package has needs to be run separately. The SNP1 and ADM statistics run pretty quick (< 30 min for all chromosomes), whereas as the SUM and MIX statisics take hours. Here is an example fo running MIXSCORE ADM statistic.
 
+```
+for i in {1..22}; do mixscore ADM T2D_AA_Chr${i}.ADM.par ; done
+```
+
+## Plotting Results in R
+MIXSCORE output files prints the Chi2 for each SNP by row. To make a manhattan plot separate chromosome output files need to be merged into one file. Once this is complete the p-value for the Chi2 need to be calculated for each SNP. Finally the original map information needs to merged into this file, including SNP name and BP location. The final file should have SNP, BP, and P-value columns and can be easily plotting using qqman.r source code found here http://www.gettinggeneticsdone.com/2014/05/qqman-r-package-for-qq-and-manhattan-plots-for-gwas-results.html
+.

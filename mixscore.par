@@ -1,0 +1,10 @@
+nsamples:3342
+nsnps:21448
+phenofile:T2D_AA_PHENO_MIXSCORE 
+ancfile: T2D_AA_Chr13.MIXSCORE
+genofile: Chr13_mixscore_geno
+thetafile: T2D_AA_EUR_GLOBANC
+useempiricalvariance: YES
+orfile: AA_T2D_Chr13_OR_ADM
+esfile: AA_T2D_Chr13_ES_ADM
+outfile: AA_T2D_Chr13_ADM

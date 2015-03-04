@@ -110,7 +110,7 @@ The next few steps are how to perform admixture mapping using MIXSCORE, which is
 
 ## Making MIXSCORE input files.
 
-MIXSCORE runs several statistics that extend beyond both GWAS and admixture mapping independently to create a summary statistic that takes into account multiple hypothesis to identify putative genetic associations. Information about MIXSCORE can be found here and downloaded here. MIXSCORE requires genome-wide genotype information, global ancestry estimates (per individual), local ancestry calls (per SNP for every individual), phenotype information, covariate information (if necessary), and a parameter file.See sample files, mixscore.GENO, mixscore.GLOBANC, mixscore.LOCANC, mixscore.PHENO, mixscore.PAR
+MIXSCORE runs several statistics that extend beyond both GWAS and admixture mapping independently to create a summary statistic that takes into account multiple hypothesis to identify putative genetic associations. Information about MIXSCORE can be found here and downloaded here. MIXSCORE requires genome-wide genotype information, global ancestry estimates (per individual), local ancestry calls (per SNP for every individual), phenotype information, covariate information (if necessary), and a parameter file.See sample files, mixscore.GENO, mixscore.GLOBANC, mixscore.LOCANC, mixscore.PHENO, mixscore.par
 
 ### Converting RFMix Local ancestry calls to HapMix format for MIXSCORE
 I used a script that converts three way local ancestry calls from RFMix and collapses and recodes them into HapMix format for MIXSCORE, convert_RFMIX_MIXSCORE.sh, this will work for African Americans and codes RFMix output in to African vs Non African diplotype calls. See mixscore.LOCANC for an example
@@ -131,14 +131,15 @@ MIXSCORE uses a phenotype file that is one line and codes cases as 1 and control
 MIXSCORE requires a simple parameter file that states how many SNPs are being tested, how many samples to expect, the location of the input files, and the name and location of the output file. You can add additional options in this file too, such as running quantitative traits, see manual. Unfortunately mixscore does not allow a covariates (a major limitation to the method).
 Here is an example of a parameter file for one chromosome for the ADM (case-only admixture mapping) statistic. 
 
+```
 nsamples:3342
 nsnps:8229
-phenofile:T2D_AA_PHENO_MIXSCORE
-ancfile: T2D_AA_Chr22.MIXSCORE
-genofile: Chr22_mixscore_geno
-thetafile: T2D_AA_EUR_GLOBANC
-outfile: AA_T2D_Chr22_ADM
-
+phenofile: mixscore.PHENO
+ancfile: mixscore.LOCANC
+genofile: mixscore.GENO
+thetafile: mixscore.GLOBANC
+outfile: AA_ADM_STAT
+```
 
 ## Running MIXSCORE
 Each statistic the MIXSCORE package has needs to be run separately. The SNP1 and ADM statistics run pretty quick (< 30 min for all chromosomes), whereas as the SUM and MIX statisics take hours. Here is an example fo running MIXSCORE ADM statistic.
@@ -147,10 +148,10 @@ Each statistic the MIXSCORE package has needs to be run separately. The SNP1 and
 for i in {1..22}; do mixscore ADM T2D_AA_Chr${i}.ADM.par ; done
 ```
 ## Running mixomatic
-Alternatively, if you just want to run admixture mapping with both cases and controls and/or the SUM of the association and admixture association you can use mixomatic. Mixomatic is nice in the sense that it incorporates cases and controls and allows the user to add covariates, including genotype information. This method uses likilhood ratio test to determine whether local ancetsry explains cases. This methods can also be used for quantitative traits.
+Alternatively, if you just want to run admixture mapping with both cases and controls and/or the SUM of the association and admixture association you can use mixomatic. Mixomatic is a R script (in process by Chris Gignoux at Stanford) and is nice in the sense that it incorporates cases and controls and allows the user to add covariates, including genotype information. This method uses likilhood ratio test to determine whether local ancetsry explains cases. This methods can also be used for quantitative traits.I can give more detail upon request.
 
 ## Plotting Results in R
 MIXSCORE output files prints the Chi2 for each SNP by row. To make a manhattan plot separate chromosome output files need to be merged into one file. Once this is complete the p-value for the Chi2 need to be calculated for each SNP. Finally the original map information needs to merged into this file, including SNP name and BP location. The final file should have SNP, BP, and P-value columns and can be easily plotting using qqman.r source code found here http://www.gettinggeneticsdone.com/2014/05/qqman-r-package-for-qq-and-manhattan-plots-for-gwas-results.html
 
-The input file should look something like this..
+
 
